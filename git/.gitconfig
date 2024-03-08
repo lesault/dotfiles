@@ -2,4 +2,9 @@
 	name = lesault
 	email = github@lesault.net
 [init]
+	# Name the default branch "main", not "master".
 	defaultBranch = main
+
+# When pushing to Github, use SSH instead of HTTPS.
+[url "ssh://git@github.com/"]
+	pushInsteadOf = https://github.com/
