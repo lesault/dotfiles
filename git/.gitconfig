@@ -1,0 +1,5 @@
+[user]
+	name = lesault
+	email = github@lesault.net
+[init]
+	defaultBranch = main
