@@ -116,6 +116,21 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# Start SSH agent to manage SSH keys and suppress output
-eval $(ssh-agent > /dev/null)
+# Start SSH agent if not already running
+if [ -z "$SSH_AGENT_PID" ] || ! ps -p $SSH_AGENT_PID > /dev/null; then
+    eval $(ssh-agent) > /dev/null
+fi
 
+# Alias to add named private key to ssh-add
+alias addkey='add_named_key'
+
+# Function to add named private key to ssh-add
+add_named_key() {
+    local keyfile="$1"
+    local fingerprint=$(ssh-keygen -lf "$keyfile" | awk '{print $2}')
+    if ssh-add -l | grep -q "$fingerprint"; then
+        echo "Key '$keyfile' is already added."
+    else
+        ssh-add "$keyfile"
+    fi
+}
