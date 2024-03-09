@@ -115,3 +115,7 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+# Start SSH agent to manage SSH keys and suppress output
+eval $(ssh-agent > /dev/null)
+
