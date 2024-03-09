@@ -116,9 +116,26 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# Start SSH agent if not already running
-if [ -z "$SSH_AGENT_PID" ] || ! ps -p $SSH_AGENT_PID > /dev/null; then
-    eval $(ssh-agent) > /dev/null
+# Check if the SSH agent is running
+ssh-add -l &>/dev/null
+
+# If the exit status indicates SSH agent is not running
+if [ "$?" == 2 ]; then
+    # Check if the ~/.ssh-agent file exists and is readable
+    test -r ~/.ssh-agent && \
+        # Load SSH agent variables from ~/.ssh-agent file
+        eval "$(<~/.ssh-agent)" >/dev/null
+
+    # Check SSH agent status again after attempting to load variables
+    ssh-add -l &>/dev/null
+
+    # If SSH agent is still not running
+    if [ "$?" == 2 ]; then
+        # Start a new SSH agent and save variables to ~/.ssh-agent file
+        (umask 066; ssh-agent > ~/.ssh-agent)
+        # Load SSH agent variables into the shell environment
+        eval "$(<~/.ssh-agent)" >/dev/null
+    fi
 fi
 
 # Alias to add named private key to ssh-add
