@@ -1,0 +1,6 @@
+# The .hushlogin file suppresses unnecessary login messages
+# for a cleaner login experience. It removes the display
+# of the "Last login" message and other system information
+# that might otherwise clutter the terminal when logging in.
+# This file helps streamline the login process while
+# maintaining the functionality of the shell.
